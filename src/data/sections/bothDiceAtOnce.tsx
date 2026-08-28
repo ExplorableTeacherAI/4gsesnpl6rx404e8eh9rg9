@@ -1,5 +1,5 @@
 import React, { useRef, useState, type ReactElement } from "react";
-import { SplitLayout, StackLayout } from "@/components/layouts";
+import { StackLayout } from "@/components/layouts";
 import { Block } from "@/components/templates";
 import {
     EditableH2,
@@ -21,22 +21,18 @@ import {
 } from "../variables";
 import { AMBER, DIE_FACES, INDIGO, INK, INK_QUIET, INK_STRUCTURE, TEAL } from "./diceGridGeometry";
 
-/**
- * The grid and the tree sit side by side in half-width columns, so both use
- * their own compact 360-wide canvas rather than the full-width geometry of the
- * earlier sections. Everything they share travels through the variable store.
- */
-const VIEW = 360;
-const VIEW_HEIGHT = 476;
+const VIEW = 560;
 
-// ── Grid geometry (compact) ─────────────────────────────────────────────────
-const CELL = 40;
-const GRID = CELL * 6; // 240
-const ORIGIN_X = 90;
-const ORIGIN_Y = 100;
-const ROW_HANDLE_X = ORIGIN_X - 24; // 66
-const COLUMN_HANDLE_Y = ORIGIN_Y - 24; // 76
-const HANDLE_RADIUS = 12;
+// ── Grid geometry ───────────────────────────────────────────────────────────
+const GRID_VIEW_HEIGHT = 440;
+const CELL = 46;
+const GRID = CELL * 6; // 276
+const ORIGIN_X = 110;
+const ORIGIN_Y = 110;
+const ROW_HANDLE_X = ORIGIN_X - 26; // 84
+const COLUMN_HANDLE_Y = ORIGIN_Y - 26; // 84
+const HANDLE_RADIUS = 14;
+const PANEL_X = 410;
 
 const cellX = (face: number) => ORIGIN_X + (face - 1) * CELL;
 const cellY = (face: number) => ORIGIN_Y + (face - 1) * CELL;
@@ -93,7 +89,7 @@ function useBothHighlight() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The grid: two bands crossing in exactly one square
+// Figure 1 — the grid: two bands crossing in exactly one square
 // ─────────────────────────────────────────────────────────────────────────────
 
 function BothDiceDrawing() {
@@ -119,7 +115,7 @@ function BothDiceDrawing() {
         const rect = svg.getBoundingClientRect();
         return {
             x: ((event.clientX - rect.left) / rect.width) * VIEW,
-            y: ((event.clientY - rect.top) / rect.height) * VIEW_HEIGHT,
+            y: ((event.clientY - rect.top) / rect.height) * GRID_VIEW_HEIGHT,
         };
     };
 
@@ -138,7 +134,7 @@ function BothDiceDrawing() {
     return (
         <svg
             ref={svgRef}
-            viewBox={`0 0 ${VIEW} ${VIEW_HEIGHT}`}
+            viewBox={`0 0 ${VIEW} ${GRID_VIEW_HEIGHT}`}
             className="block w-full"
             role="img"
             aria-label="A six by six grid where a draggable teal marker picks a row and a draggable indigo marker picks a column"
@@ -151,16 +147,16 @@ function BothDiceDrawing() {
 
             {/* Axis titles */}
             <g opacity={active ? 0.35 : 1} style={{ transition: "opacity 150ms ease-out" }} pointerEvents="none">
-                <text x={ORIGIN_X + GRID / 2} y={44} fill={INK_STRUCTURE} fontSize="11" textAnchor="middle">
+                <text x={ORIGIN_X + GRID / 2} y={58} fill={INK_STRUCTURE} fontSize="12" textAnchor="middle">
                     Indigo die
                 </text>
                 <text
-                    x={32}
+                    x={40}
                     y={ORIGIN_Y + GRID / 2}
                     fill={INK_STRUCTURE}
-                    fontSize="11"
+                    fontSize="12"
                     textAnchor="middle"
-                    transform={`rotate(-90 32 ${ORIGIN_Y + GRID / 2})`}
+                    transform={`rotate(-90 40 ${ORIGIN_Y + GRID / 2})`}
                 >
                     Teal die
                 </text>
@@ -270,9 +266,9 @@ function BothDiceDrawing() {
                 />
                 <text
                     x={columnCentre}
-                    y={rowCentre + 4}
+                    y={rowCentre + 5}
                     fill={INK}
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight={700}
                     textAnchor="middle"
                     style={{ fontVariantNumeric: "tabular-nums" }}
@@ -281,7 +277,7 @@ function BothDiceDrawing() {
                 </text>
             </g>
 
-            {/* Squares owned by the branch end the reader is pointing at */}
+            {/* Squares owned by the branch end the reader is pointing at in the tree */}
             {leafHighlight && (
                 <g pointerEvents="none">
                     {leafCells(leafHighlight, tealFace, indigoFace).map(([row, column]) => (
@@ -306,9 +302,9 @@ function BothDiceDrawing() {
                     <text
                         key={`row-label-${face}`}
                         x={ROW_HANDLE_X}
-                        y={cellCentreY(face) + 4}
+                        y={cellCentreY(face) + 5}
                         fill={INK_STRUCTURE}
-                        fontSize="12"
+                        fontSize="13"
                         textAnchor="middle"
                         style={{ fontVariantNumeric: "tabular-nums" }}
                     >
@@ -324,9 +320,9 @@ function BothDiceDrawing() {
                 />
                 <text
                     x={ROW_HANDLE_X}
-                    y={rowCentre + 4}
+                    y={rowCentre + 5}
                     fill="#FFFFFF"
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight={700}
                     textAnchor="middle"
                     style={{ fontVariantNumeric: "tabular-nums" }}
@@ -340,9 +336,9 @@ function BothDiceDrawing() {
                     <text
                         key={`column-label-${face}`}
                         x={cellCentreX(face)}
-                        y={COLUMN_HANDLE_Y + 4}
+                        y={COLUMN_HANDLE_Y + 5}
                         fill={INK_STRUCTURE}
-                        fontSize="12"
+                        fontSize="13"
                         textAnchor="middle"
                         style={{ fontVariantNumeric: "tabular-nums" }}
                     >
@@ -358,9 +354,9 @@ function BothDiceDrawing() {
                 />
                 <text
                     x={columnCentre}
-                    y={COLUMN_HANDLE_Y + 4}
+                    y={COLUMN_HANDLE_Y + 5}
                     fill="#FFFFFF"
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight={700}
                     textAnchor="middle"
                     style={{ fontVariantNumeric: "tabular-nums" }}
@@ -369,32 +365,31 @@ function BothDiceDrawing() {
                 </text>
             </g>
 
-            {/* Readout below the drawing */}
+            {/* Readout panel beside the drawing */}
             <g
                 opacity={active ? 0.35 : 1}
                 style={{ transition: "opacity 150ms ease-out", fontVariantNumeric: "tabular-nums" }}
                 pointerEvents="none"
-                textAnchor="middle"
+                fontSize="12"
             >
-                <text x={180} y={374} fill={TEAL} fontSize="11">
-                    Teal alone: 6 of 36
-                </text>
-                <text x={180} y={394} fill={INDIGO} fontSize="11">
-                    Indigo alone: 6 of 36
-                </text>
-                <text x={180} y={424} fill={AMBER} fontSize="15" fontWeight={700}>
-                    Both: 1 of 36
-                </text>
-                <text x={180} y={448} fill={INK_STRUCTURE} fontSize="11">
-                    1/6 of 1/6 = 1/36
-                </text>
+                <text x={PANEL_X} y={150} fill={INK_STRUCTURE}>Teal die alone</text>
+                <text x={PANEL_X} y={172} fill={TEAL} fontWeight={600}>6 of 36</text>
+                <text x={PANEL_X} y={216} fill={INK_STRUCTURE}>Indigo die alone</text>
+                <text x={PANEL_X} y={238} fill={INDIGO} fontWeight={600}>6 of 36</text>
+                <text x={PANEL_X} y={286} fill={INK_STRUCTURE}>Both together</text>
+                <text x={PANEL_X} y={316} fill={AMBER} fontSize="20" fontWeight={700}>1 of 36</text>
+                <text x={PANEL_X} y={342} fill={INK_STRUCTURE} fontSize="13">1/6 of 1/6</text>
             </g>
+
+            <text x={280} y={410} fill={INK_STRUCTURE} fontSize="12" textAnchor="middle">
+                Drag either marker to change which faces are required
+            </text>
 
             {/* Drag strip for the teal face */}
             <rect
-                x={ORIGIN_X - 40}
+                x={ORIGIN_X - 44}
                 y={ORIGIN_Y}
-                width={34}
+                width={36}
                 height={GRID}
                 fill="transparent"
                 style={{ cursor: dragging === "row" ? "grabbing" : "grab", touchAction: "none" }}
@@ -418,9 +413,9 @@ function BothDiceDrawing() {
             {/* Drag strip for the indigo face */}
             <rect
                 x={ORIGIN_X}
-                y={ORIGIN_Y - 40}
+                y={ORIGIN_Y - 44}
                 width={GRID}
-                height={34}
+                height={36}
                 fill="transparent"
                 style={{ cursor: dragging === "column" ? "grabbing" : "grab", touchAction: "none" }}
                 onPointerDown={(event) => {
@@ -482,7 +477,7 @@ function BothDiceFigure() {
                 setVar("bothHighlight", "");
                 setVar("bothLeafPinned", "");
             }}
-            caption="Counting. The teal band holds every roll where the teal die obliges, the indigo band does the same for the indigo die, and the two cross in one square."
+            caption="Counting the squares. The teal band holds every roll where the teal die obliges, the indigo band does the same for the indigo die, and the two cross in one square."
         >
             <BothDiceDrawing />
             <InteractionHintSequence
@@ -492,14 +487,14 @@ function BothDiceFigure() {
                     {
                         gesture: "drag-vertical",
                         label: "Drag the teal marker to another row",
-                        position: { x: "18%", y: "42%" },
+                        position: { x: "15%", y: "51%" },
                         dragPath: { type: "line", startOffset: { x: 0, y: -22 }, endOffset: { x: 0, y: 22 } },
                     },
                     {
                         gesture: "drag-horizontal",
                         label: "Now drag the indigo marker across",
-                        position: { x: "75%", y: "16%" },
-                        dragPath: { type: "line", startOffset: { x: -22, y: 0 }, endOffset: { x: 22, y: 0 } },
+                        position: { x: "57%", y: "19%" },
+                        dragPath: { type: "line", startOffset: { x: -24, y: 0 }, endOffset: { x: 24, y: 0 } },
                     },
                 ]}
             />
@@ -508,30 +503,79 @@ function BothDiceFigure() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The tree: the same fact told by multiplying instead of counting
+// Figure 2 — the tree diagram: branch, branch, multiply along the path
 // ─────────────────────────────────────────────────────────────────────────────
 
-const ROOT: [number, number] = [44, 220];
-const NODE_TEAL_YES: [number, number] = [150, 120];
-const NODE_TEAL_NO: [number, number] = [150, 320];
-const LEAF_X = 236;
-const LEAF_LABEL_X = 248;
+const TREE_VIEW_HEIGHT = 432;
+const ROOT: [number, number] = [70, 210];
+const NODE_TEAL_YES: [number, number] = [210, 110];
+const NODE_TEAL_NO: [number, number] = [210, 310];
+const LEAF_X = 380;
+const LEAF_LABEL_X = 398;
 
 interface TreeLeaf {
     id: string;
     y: number;
     from: [number, number];
     branchId: string;
+    stageOneId: string;
+    /** Text of the second-stage branch, built from the live indigo face. */
+    secondOutcome: (indigo: number) => string;
+    secondFraction: string;
     name: string;
-    value: string;
+    product: string;
     color: string;
 }
 
 const TREE_LEAVES: TreeLeaf[] = [
-    { id: "leafBoth", y: 70, from: NODE_TEAL_YES, branchId: "branchBoth", name: "Both", value: "1/36", color: AMBER },
-    { id: "leafTealOnly", y: 170, from: NODE_TEAL_YES, branchId: "branchTealOnly", name: "Teal only", value: "5/36", color: TEAL },
-    { id: "leafIndigoOnly", y: 270, from: NODE_TEAL_NO, branchId: "branchIndigoOnly", name: "Indigo only", value: "5/36", color: INDIGO },
-    { id: "leafNeither", y: 370, from: NODE_TEAL_NO, branchId: "branchNeither", name: "Neither", value: "25/36", color: INK_STRUCTURE },
+    {
+        id: "leafBoth",
+        y: 60,
+        from: NODE_TEAL_YES,
+        branchId: "branchBoth",
+        stageOneId: "stageOneYes",
+        secondOutcome: (indigo) => `indigo = ${indigo}`,
+        secondFraction: "1/6",
+        name: "Both oblige",
+        product: "1/6 of 1/6 = 1/36",
+        color: AMBER,
+    },
+    {
+        id: "leafTealOnly",
+        y: 160,
+        from: NODE_TEAL_YES,
+        branchId: "branchTealOnly",
+        stageOneId: "stageOneYes",
+        secondOutcome: (indigo) => `indigo not ${indigo}`,
+        secondFraction: "5/6",
+        name: "Teal only",
+        product: "1/6 of 5/6 = 5/36",
+        color: TEAL,
+    },
+    {
+        id: "leafIndigoOnly",
+        y: 260,
+        from: NODE_TEAL_NO,
+        branchId: "branchIndigoOnly",
+        stageOneId: "stageOneNo",
+        secondOutcome: (indigo) => `indigo = ${indigo}`,
+        secondFraction: "1/6",
+        name: "Indigo only",
+        product: "5/6 of 1/6 = 5/36",
+        color: INDIGO,
+    },
+    {
+        id: "leafNeither",
+        y: 360,
+        from: NODE_TEAL_NO,
+        branchId: "branchNeither",
+        stageOneId: "stageOneNo",
+        secondOutcome: (indigo) => `indigo not ${indigo}`,
+        secondFraction: "5/6",
+        name: "Neither",
+        product: "5/6 of 5/6 = 25/36",
+        color: INK_STRUCTURE,
+    },
 ];
 
 /** Which branches light up for each thing the reader can point at. */
@@ -541,9 +585,14 @@ function poppedParts(active: string): Set<string> {
     const leafId = active === "bothSquare" ? "leafBoth" : active;
     const leaf = TREE_LEAVES.find((candidate) => candidate.id === leafId);
     if (!leaf) return new Set();
-    const stageOne = leaf.from === NODE_TEAL_YES ? "stageOneYes" : "stageOneNo";
-    return new Set([stageOne, leaf.branchId, leaf.id]);
+    return new Set([leaf.stageOneId, leaf.branchId, leaf.id]);
 }
+
+/** Midpoint of a branch, used to anchor its label. */
+const midpoint = (from: [number, number], to: [number, number]): [number, number] => [
+    (from[0] + to[0]) / 2,
+    (from[1] + to[1]) / 2,
+];
 
 function BothDiceTreeDrawing() {
     const tealFace = useVar<number>("bothTealFace", 3);
@@ -563,7 +612,7 @@ function BothDiceTreeDrawing() {
                     x2={to[0]}
                     y2={to[1]}
                     stroke={color}
-                    strokeWidth="9"
+                    strokeWidth="10"
                     opacity={0.28}
                     strokeLinecap="round"
                 />
@@ -574,7 +623,7 @@ function BothDiceTreeDrawing() {
                 x2={to[0]}
                 y2={to[1]}
                 stroke={color}
-                strokeWidth={heavy(id) ? 4 : 2}
+                strokeWidth={heavy(id) ? 4.5 : 2.5}
                 strokeLinecap="round"
                 style={{ transition: "stroke-width 150ms ease-out" }}
             />
@@ -583,84 +632,107 @@ function BothDiceTreeDrawing() {
 
     return (
         <svg
-            viewBox={`0 0 ${VIEW} ${VIEW_HEIGHT}`}
+            viewBox={`0 0 ${VIEW} ${TREE_VIEW_HEIGHT}`}
             className="block w-full"
             role="img"
-            aria-label="A two stage tree diagram for the teal die and then the indigo die, with four branch ends"
+            aria-label="A two stage tree diagram: the teal die branches into two, then the indigo die branches again, giving four branch ends"
         >
-            <g opacity={active ? 0.35 : 1} style={{ transition: "opacity 150ms ease-out" }} pointerEvents="none" fontSize="11">
-                <text x={150} y={44} fill={INK_STRUCTURE} textAnchor="middle">Teal die</text>
-                <text x={LEAF_X} y={44} fill={INK_STRUCTURE} textAnchor="middle">Indigo die</text>
-                <text x={ROOT[0]} y={250} fill={INK_STRUCTURE} textAnchor="middle">Start</text>
-            </g>
-
+            {/* Branches */}
             {branch("stageOneYes", ROOT, NODE_TEAL_YES, TEAL)}
             {branch("stageOneNo", ROOT, NODE_TEAL_NO, INK_STRUCTURE)}
             {TREE_LEAVES.map((leaf) => branch(leaf.branchId, leaf.from, [LEAF_X, leaf.y], leaf.color))}
 
-            {/* Branch probabilities, each with the outcome it stands for */}
-            <g style={{ fontVariantNumeric: "tabular-nums" }} pointerEvents="none" textAnchor="middle">
-                <text x={97} y={160} fill={TEAL} fontSize="11" fontWeight={600} opacity={dimFor("stageOneYes")}>1/6</text>
-                <text x={97} y={288} fill={INK_STRUCTURE} fontSize="11" opacity={dimFor("stageOneNo")}>5/6</text>
+            {/* First stage: what the teal die does */}
+            <g pointerEvents="none" textAnchor="middle" style={{ fontVariantNumeric: "tabular-nums" }}>
+                <g opacity={dimFor("stageOneYes")} style={{ transition: "opacity 150ms ease-out" }}>
+                    <text x={midpoint(ROOT, NODE_TEAL_YES)[0]} y={134} fill={TEAL} fontSize="12" fontWeight={600}>
+                        {`teal = ${tealFace}`}
+                    </text>
+                    <text x={midpoint(ROOT, NODE_TEAL_YES)[0]} y={150} fill={TEAL} fontSize="13" fontWeight={700}>
+                        1/6
+                    </text>
+                </g>
+                <g opacity={dimFor("stageOneNo")} style={{ transition: "opacity 150ms ease-out" }}>
+                    <text x={midpoint(ROOT, NODE_TEAL_NO)[0]} y={280} fill={INK_STRUCTURE} fontSize="13" fontWeight={700}>
+                        5/6
+                    </text>
+                    <text x={midpoint(ROOT, NODE_TEAL_NO)[0]} y={298} fill={INK_STRUCTURE} fontSize="12">
+                        {`teal not ${tealFace}`}
+                    </text>
+                </g>
+            </g>
 
-                <text x={193} y={84} fill={INDIGO} fontSize="11" fontWeight={600} opacity={dimFor("branchBoth")}>1/6</text>
-                <text x={193} y={68} fill={INDIGO} fontSize="9" opacity={dimFor("branchBoth")}>
-                    {`indigo = ${indigoFace}`}
-                </text>
+            {/* Second stage: what the indigo die does, on each of the four branches */}
+            <g pointerEvents="none" textAnchor="middle" style={{ fontVariantNumeric: "tabular-nums" }}>
+                {TREE_LEAVES.map((leaf) => {
+                    const [midX, midY] = midpoint(leaf.from, [LEAF_X, leaf.y]);
+                    const above = leaf.y < leaf.from[1];
+                    const fractionY = above ? midY - 11 : midY + 21;
+                    const outcomeY = above ? midY - 29 : midY + 39;
+                    return (
+                        <g
+                            key={`stage-two-${leaf.id}`}
+                            opacity={dimFor(leaf.branchId)}
+                            style={{ transition: "opacity 150ms ease-out" }}
+                        >
+                            <text x={midX} y={fractionY} fill={leaf.color} fontSize="13" fontWeight={700}>
+                                {leaf.secondFraction}
+                            </text>
+                            <text x={midX} y={outcomeY} fill={leaf.color} fontSize="12">
+                                {leaf.secondOutcome(indigoFace)}
+                            </text>
+                        </g>
+                    );
+                })}
+            </g>
 
-                <text x={193} y={164} fill={INK_STRUCTURE} fontSize="11" opacity={dimFor("branchTealOnly")}>5/6</text>
-                <text x={193} y={180} fill={INK_STRUCTURE} fontSize="9" opacity={dimFor("branchTealOnly")}>
-                    {`indigo not ${indigoFace}`}
-                </text>
-
-                <text x={193} y={284} fill={INDIGO} fontSize="11" opacity={dimFor("branchIndigoOnly")}>1/6</text>
-                <text x={193} y={268} fill={INDIGO} fontSize="9" opacity={dimFor("branchIndigoOnly")}>
-                    {`indigo = ${indigoFace}`}
-                </text>
-
-                <text x={193} y={364} fill={INK_STRUCTURE} fontSize="11" opacity={dimFor("branchNeither")}>5/6</text>
-                <text x={193} y={380} fill={INK_STRUCTURE} fontSize="9" opacity={dimFor("branchNeither")}>
-                    {`indigo not ${indigoFace}`}
+            {/* Nodes */}
+            <g pointerEvents="none">
+                <circle cx={ROOT[0]} cy={ROOT[1]} r="6" fill={INK_STRUCTURE} opacity={active ? 0.35 : 1} />
+                <circle cx={NODE_TEAL_YES[0]} cy={NODE_TEAL_YES[1]} r="6" fill={TEAL} opacity={dimFor("stageOneYes")} />
+                <circle cx={NODE_TEAL_NO[0]} cy={NODE_TEAL_NO[1]} r="6" fill={INK_STRUCTURE} opacity={dimFor("stageOneNo")} />
+                <text
+                    x={ROOT[0]}
+                    y={240}
+                    fill={INK_STRUCTURE}
+                    fontSize="12"
+                    textAnchor="middle"
+                    opacity={active ? 0.35 : 1}
+                >
+                    Roll
                 </text>
             </g>
 
-            {/* Stage one nodes */}
-            <g style={{ fontVariantNumeric: "tabular-nums" }} pointerEvents="none" textAnchor="middle">
-                <text x={150} y={104} fill={TEAL} fontSize="11" fontWeight={600} opacity={dimFor("stageOneYes")}>
-                    {`teal = ${tealFace}`}
-                </text>
-                <text x={150} y={344} fill={INK_STRUCTURE} fontSize="11" opacity={dimFor("stageOneNo")}>
-                    {`teal not ${tealFace}`}
-                </text>
-                <circle cx={NODE_TEAL_YES[0]} cy={NODE_TEAL_YES[1]} r="5" fill={TEAL} opacity={dimFor("stageOneYes")} />
-                <circle cx={NODE_TEAL_NO[0]} cy={NODE_TEAL_NO[1]} r="5" fill={INK_STRUCTURE} opacity={dimFor("stageOneNo")} />
-                <circle cx={ROOT[0]} cy={ROOT[1]} r="5" fill={INK_STRUCTURE} opacity={active ? 0.35 : 1} />
-            </g>
-
-            {/* Branch ends — click one to hold its squares on the grid */}
+            {/* Branch ends — hover or click one to shade its squares on the grid above */}
             {TREE_LEAVES.map((leaf) => (
                 <g key={leaf.id}>
                     <g opacity={dimFor(leaf.id)} style={{ transition: "opacity 150ms ease-out" }} pointerEvents="none">
-                        {heavy(leaf.id) && <circle cx={LEAF_X} cy={leaf.y} r="13" fill={leaf.color} opacity={0.28} />}
-                        <circle cx={LEAF_X} cy={leaf.y} r={heavy(leaf.id) ? 8 : 6} fill={leaf.color} />
-                        <text x={LEAF_LABEL_X} y={leaf.y - 4} fill={INK} fontSize="12" fontWeight={heavy(leaf.id) ? 700 : 600}>
+                        {heavy(leaf.id) && <circle cx={LEAF_X} cy={leaf.y} r="15" fill={leaf.color} opacity={0.28} />}
+                        <circle cx={LEAF_X} cy={leaf.y} r={heavy(leaf.id) ? 9 : 7} fill={leaf.color} />
+                        <text
+                            x={LEAF_LABEL_X}
+                            y={leaf.y - 4}
+                            fill={INK}
+                            fontSize="13"
+                            fontWeight={heavy(leaf.id) ? 700 : 600}
+                        >
                             {leaf.name}
                         </text>
                         <text
                             x={LEAF_LABEL_X}
-                            y={leaf.y + 13}
+                            y={leaf.y + 14}
                             fill={leaf.color}
-                            fontSize="11"
+                            fontSize="12"
                             style={{ fontVariantNumeric: "tabular-nums" }}
                         >
-                            {leaf.value}
+                            {leaf.product}
                         </text>
                         {pinned === leaf.id && (
                             <rect
-                                x={242}
-                                y={leaf.y - 19}
-                                width={92}
-                                height={38}
+                                x={392}
+                                y={leaf.y - 20}
+                                width={140}
+                                height={40}
                                 rx="8"
                                 fill="none"
                                 stroke={leaf.color}
@@ -669,10 +741,10 @@ function BothDiceTreeDrawing() {
                         )}
                     </g>
                     <rect
-                        x={224}
-                        y={leaf.y - 20}
-                        width={112}
-                        height={40}
+                        x={366}
+                        y={leaf.y - 22}
+                        width={166}
+                        height={44}
                         fill="transparent"
                         style={{ cursor: "pointer" }}
                         onPointerEnter={() => setHover(leaf.id)}
@@ -682,8 +754,8 @@ function BothDiceTreeDrawing() {
                 </g>
             ))}
 
-            <text x={180} y={424} fill={INK_STRUCTURE} fontSize="11" textAnchor="middle">
-                Click a branch end to hold its squares
+            <text x={280} y={404} fill={INK_STRUCTURE} fontSize="12" textAnchor="middle">
+                Click a branch end to shade its squares on the grid above
             </text>
         </svg>
     );
@@ -698,7 +770,7 @@ function BothDiceTreeFigure() {
                 setVar("bothLeafPinned", "");
                 setVar("bothHighlight", "");
             }}
-            caption="Multiplying. The same two rolls as a tree, where the fractions along a path multiply to the share of the 36 squares that path owns."
+            caption="Multiplying along the branches. The teal die splits the roll in two, the indigo die splits each half again, and the four branch ends account for all 36 squares."
         >
             <BothDiceTreeDrawing />
             <InteractionHintSequence
@@ -707,7 +779,7 @@ function BothDiceTreeFigure() {
                     {
                         gesture: "click",
                         label: "Click a branch end",
-                        position: { x: "78%", y: "15%" },
+                        position: { x: "68%", y: "14%" },
                     },
                 ]}
             />
@@ -730,26 +802,39 @@ export const bothDiceAtOnceBlocks: ReactElement[] = [
         <Block id="both-dice-setup" padding="sm">
             <EditableParagraph id="para-both-dice-setup" blockId="both-dice-setup">
                 Landing on at least one 6 took eleven squares. Demanding that both dice show
-                a 6 is a far thinner ask. Drag the markers on the grid to choose the two
-                faces, then click a branch end on the tree beside it to see which squares
-                that outcome owns.
+                a 6 is a far thinner ask. Drag the markers on the grid and watch how many
+                squares survive both demands.
             </EditableParagraph>
         </Block>
     </StackLayout>,
 
-    <SplitLayout key="layout-both-dice-pair" ratio="1:1" gap="lg" align="start">
+    <StackLayout key="layout-both-dice-figure" maxWidth="xl">
         <Block id="both-dice-figure" padding="sm" hasVisualization>
             <BothDiceFigure />
         </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-both-dice-tree-lead" maxWidth="xl">
+        <Block id="both-dice-tree-lead" padding="sm">
+            <EditableParagraph id="para-both-dice-tree-lead" blockId="both-dice-tree-lead">
+                A tree diagram tells the same story by branching instead of counting. The
+                teal die splits the roll into two branches, the indigo die splits each of
+                those again, and clicking any branch end below shades exactly the squares it
+                owns on the grid above.
+            </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-both-dice-tree-figure" maxWidth="xl">
         <Block id="both-dice-tree-figure" padding="sm" hasVisualization>
             <BothDiceTreeFigure />
         </Block>
-    </SplitLayout>,
+    </StackLayout>,
 
     <StackLayout key="layout-both-dice-reflect" maxWidth="xl">
         <Block id="both-dice-reflect" padding="sm">
             <EditableParagraph id="para-both-dice-reflect" blockId="both-dice-reflect">
-                Always one. The grid counts: asking for teal{" "}
+                Always one. Asking for teal{" "}
                 <InlineScrubbleNumber
                     varName="bothTealFace"
                     {...numberPropsFromDefinition(getVariableInfo('bothTealFace'))}
@@ -779,8 +864,8 @@ export const bothDiceAtOnceBlocks: ReactElement[] = [
                 >
                     one square out of 36
                 </InlineLinkedHighlight>
-                . The tree gets there by multiplying instead, 1/6 along the first branch and
-                1/6 along the second, and 1/6 of 1/6 is that very same 1/36.
+                . The tree reaches it by multiplying, 1/6 of 1/6, and the four branch ends
+                add back up to the whole grid.
             </EditableParagraph>
         </Block>
     </StackLayout>,
@@ -803,7 +888,7 @@ export const bothDiceAtOnceBlocks: ReactElement[] = [
                             {
                                 gesture: "drag-vertical",
                                 label: "Drag the teal marker all the way down to 6",
-                                position: { x: "18%", y: "42%" },
+                                position: { x: "15%", y: "51%" },
                                 dragPath: { type: "line", startOffset: { x: 0, y: -20 }, endOffset: { x: 0, y: 24 } },
                                 completionVar: "bothTealFace",
                                 completionValue: 6,
@@ -812,7 +897,7 @@ export const bothDiceAtOnceBlocks: ReactElement[] = [
                             {
                                 gesture: "drag-horizontal",
                                 label: "Now drag the indigo marker across to 6 and count the crossing squares",
-                                position: { x: "75%", y: "16%" },
+                                position: { x: "57%", y: "19%" },
                                 dragPath: { type: "line", startOffset: { x: -20, y: 0 }, endOffset: { x: 24, y: 0 } },
                                 completionVar: "bothIndigoFace",
                                 completionValue: 6,
