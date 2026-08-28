@@ -82,8 +82,159 @@ export interface VariableDefinition {
  */
 export const variableDefinitions: Record<string, VariableDefinition> = {
     // ========================================
-    // ADD YOUR VARIABLES HERE
+    // SECTION 2 — Every Roll on One Grid
     // ========================================
+    tealDie: {
+        defaultValue: 3,
+        type: 'number',
+        label: 'Teal die',
+        description: 'Value shown by the teal die (the row of the possibility grid)',
+        min: 1,
+        max: 6,
+        step: 1,
+        color: '#62D0AD',
+    },
+    indigoDie: {
+        defaultValue: 4,
+        type: 'number',
+        label: 'Indigo die',
+        description: 'Value shown by the indigo die (the column of the possibility grid)',
+        min: 1,
+        max: 6,
+        step: 1,
+        color: '#8E90F5',
+    },
+    gridVisitedCells: {
+        defaultValue: [],
+        type: 'array',
+        label: 'Visited grid squares',
+        description: 'Indices of the possibility-grid squares the student has landed on',
+    },
+    gridAxisHighlight: {
+        defaultValue: '',
+        type: 'linkedHighlight',
+        label: 'Grid axis highlight',
+        description: 'Which guide of the possibility grid the prose is pointing at',
+        color: '#334155',
+        bgColor: 'rgba(51, 65, 85, 0.15)',
+    },
+    answerTotalFourCount: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Squares giving a total of four',
+        description: 'Student answer for how many squares give a total of 4',
+        placeholder: '???',
+        correctAnswer: '3',
+        color: '#62D0AD',
+    },
+    answerTotalFourProbability: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Probability of a total of four',
+        description: 'Student answer for P(total of 4)',
+        placeholder: '???',
+        correctAnswer: ['3/36', '1/12'],
+        color: '#62D0AD',
+    },
+
+    // ========================================
+    // SECTION 3 — (2,5) and (5,2) Are Different Rolls
+    // ========================================
+    sevenGuess: {
+        defaultValue: 0,
+        type: 'number',
+        label: 'Guess for sevens',
+        description: 'How many squares the student predicts give a total of 7 (0 means not guessed yet)',
+        min: 0,
+        max: 11,
+        step: 1,
+        color: '#F7B23B',
+    },
+    sevenRevealed: {
+        defaultValue: false,
+        type: 'boolean',
+        label: 'Sevens revealed',
+        description: 'Whether the student has committed to a guess and seen the matching squares',
+    },
+    targetTotal: {
+        defaultValue: 7,
+        type: 'number',
+        label: 'Target total',
+        description: 'The two-dice total whose squares are highlighted on the grid',
+        min: 2,
+        max: 12,
+        step: 1,
+        color: '#62D0AD',
+    },
+    mirrorHighlight: {
+        defaultValue: '',
+        type: 'linkedHighlight',
+        label: 'Mirror pair highlight',
+        description: 'Which mirror pair of the grid the prose is pointing at',
+        color: '#8E90F5',
+        bgColor: 'rgba(142, 144, 245, 0.2)',
+    },
+    answerTotalNineCount: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Squares giving a total of nine',
+        description: 'Student answer for how many squares give a total of 9',
+        placeholder: '???',
+        correctAnswer: '4',
+        color: '#62D0AD',
+    },
+    answerTotalFiveProbability: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Probability of a total of five',
+        description: 'Student answer for P(total of 5)',
+        placeholder: '???',
+        correctAnswer: ['4/36', '1/9'],
+        color: '#62D0AD',
+    },
+
+    // ========================================
+    // SECTION 4 — Count Squares, Don't Add Chances
+    // ========================================
+    sixShadedCells: {
+        defaultValue: [],
+        type: 'array',
+        label: 'Shaded squares',
+        description: 'Indices of the grid squares the student has shaded for the at-least-one-six task',
+    },
+    sixTaskStatus: {
+        defaultValue: 'pending',
+        type: 'text',
+        label: 'Shading task status',
+        description: 'pending, partial, over or correct for the at-least-one-six shading task',
+    },
+    sixOverlapHighlight: {
+        defaultValue: '',
+        type: 'linkedHighlight',
+        label: 'Overlap square highlight',
+        description: 'Points the prose at the square where both dice show a six',
+        color: '#F7B23B',
+        bgColor: 'rgba(247, 178, 59, 0.2)',
+    },
+    answerDoubleCountReason: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Why adding overshoots',
+        description: 'Student answer for why 1/6 + 1/6 gives one square too many',
+        placeholder: '???',
+        correctAnswer: 'counted twice',
+        options: ['counted twice', 'impossible to roll', 'worth double', 'missing from the grid'],
+        color: '#8E90F5',
+    },
+    answerAtLeastOneFive: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Probability of at least one five',
+        description: 'Student answer for P(at least one die shows a 5)',
+        placeholder: '???',
+        correctAnswer: ['11/36'],
+        color: '#62D0AD',
+    },
 
     // Uncomment and modify these examples for your lesson:
 

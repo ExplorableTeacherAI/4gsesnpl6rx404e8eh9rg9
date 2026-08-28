@@ -5,6 +5,12 @@ import { type ReactElement } from "react";
 // Initialize variables and their colors from this file's variable definitions
 import { useVariableStore, initializeVariableColors } from "@/stores";
 import { getDefaultValues, variableDefinitions } from "./variables";
+
+import { probabilityIntroBlocks } from "./sections/probabilityIntro";
+import { possibilityGridBlocks } from "./sections/possibilityGrid";
+import { orderMattersBlocks } from "./sections/orderMatters";
+import { countNotAddBlocks } from "./sections/countNotAdd";
+import { probabilityConclusionBlocks } from "./sections/probabilityConclusion";
 useVariableStore.getState().initialize(getDefaultValues());
 initializeVariableColors(variableDefinitions);
 
@@ -85,5 +91,9 @@ initializeVariableColors(variableDefinitions);
  */
 
 export const blocks: ReactElement[] = [
-    // Start adding your blocks here!
+    ...probabilityIntroBlocks,
+    ...possibilityGridBlocks,
+    ...orderMattersBlocks,
+    ...countNotAddBlocks,
+    ...probabilityConclusionBlocks,
 ];
