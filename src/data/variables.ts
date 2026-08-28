@@ -224,6 +224,12 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         color: '#F7B23B',
         bgColor: 'rgba(247, 178, 59, 0.2)',
     },
+    bothLeafPinned: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Pinned tree outcome',
+        description: 'Which branch end of the tree diagram the student has clicked',
+    },
     answerDoubleSix: {
         defaultValue: '',
         type: 'text',
