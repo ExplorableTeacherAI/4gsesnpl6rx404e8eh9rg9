@@ -194,6 +194,56 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
     },
 
     // ========================================
+    // SECTION 5 — Both Dice at Once
+    // ========================================
+    bothTealFace: {
+        defaultValue: 3,
+        type: 'number',
+        label: 'Required teal face',
+        description: 'The face the teal die must show for the both-dice event',
+        min: 1,
+        max: 6,
+        step: 1,
+        color: '#62D0AD',
+    },
+    bothIndigoFace: {
+        defaultValue: 5,
+        type: 'number',
+        label: 'Required indigo face',
+        description: 'The face the indigo die must show for the both-dice event',
+        min: 1,
+        max: 6,
+        step: 1,
+        color: '#8E90F5',
+    },
+    bothHighlight: {
+        defaultValue: '',
+        type: 'linkedHighlight',
+        label: 'Both-dice highlight',
+        description: 'Which band or square of the both-dice grid the prose is pointing at',
+        color: '#F7B23B',
+        bgColor: 'rgba(247, 178, 59, 0.2)',
+    },
+    answerDoubleSix: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Probability of a double six',
+        description: 'Student answer for P(both dice show a 6)',
+        placeholder: '???',
+        correctAnswer: ['1/36'],
+        color: '#62D0AD',
+    },
+    answerBothBelowThree: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Probability both dice are below three',
+        description: 'Student answer for P(both dice show a number below 3)',
+        placeholder: '???',
+        correctAnswer: ['4/36', '1/9'],
+        color: '#62D0AD',
+    },
+
+    // ========================================
     // SECTION 4 — Count Squares, Don't Add Chances
     // ========================================
     sixShadedCells: {

@@ -10,6 +10,7 @@ import { probabilityIntroBlocks } from "./sections/probabilityIntro";
 import { possibilityGridBlocks } from "./sections/possibilityGrid";
 import { orderMattersBlocks } from "./sections/orderMatters";
 import { countNotAddBlocks } from "./sections/countNotAdd";
+import { bothDiceAtOnceBlocks } from "./sections/bothDiceAtOnce";
 import { probabilityConclusionBlocks } from "./sections/probabilityConclusion";
 useVariableStore.getState().initialize(getDefaultValues());
 initializeVariableColors(variableDefinitions);
@@ -95,5 +96,6 @@ export const blocks: ReactElement[] = [
     ...possibilityGridBlocks,
     ...orderMattersBlocks,
     ...countNotAddBlocks,
+    ...bothDiceAtOnceBlocks,
     ...probabilityConclusionBlocks,
 ];
