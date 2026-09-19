@@ -6,9 +6,11 @@ import {
     EditableParagraph,
     InlineClozeInput,
     InlineFeedback,
+    InlineFormula,
     InlineLinkedHighlight,
     InlineScrubbleNumber,
     InlineSpotColor,
+    InlineTooltip,
     InteractionHintSequence,
 } from "@/components/atoms";
 import { Figure } from "@/components/molecules";
@@ -34,6 +36,7 @@ import {
     INK_QUIET,
     INK_STRUCTURE,
     PAPER_FILL,
+    ROSE,
     TEAL,
     VIEW_WIDTH,
     cellCentreX,
@@ -260,8 +263,8 @@ function PossibilityGridDrawing() {
                     width={CELL}
                     height={CELL}
                     rx="6"
-                    fill="rgba(98, 208, 173, 0.18)"
-                    stroke={TEAL}
+                    fill="rgba(248, 160, 205, 0.22)"
+                    stroke={ROSE}
                     strokeWidth="3.5"
                     strokeLinejoin="round"
                     filter="url(#possibility-marker-shadow)"
@@ -290,7 +293,7 @@ function PossibilityGridDrawing() {
                     {indigo}
                 </text>
                 <text x={PANEL_X} y={260} fill={INK_STRUCTURE}>Total</text>
-                <text x={PANEL_X} y={288} fill={INK} fontSize="22" fontWeight={700} style={{ fontVariantNumeric: "tabular-nums" }}>
+                <text x={PANEL_X} y={288} fill={ROSE} fontSize="22" fontWeight={700} style={{ fontVariantNumeric: "tabular-nums" }}>
                     {total}
                 </text>
                 <text x={PANEL_X} y={330} fill={INK_STRUCTURE}>Squares seen</text>
@@ -403,7 +406,16 @@ export const possibilityGridBlocks: ReactElement[] = [
                     varName="indigoDie"
                     {...numberPropsFromDefinition(getVariableInfo('indigoDie'))}
                 />{" "}
-                is one square out of 36, not out of 12. All 36 are equally likely, so any
+                is one square out of 36, not out of 12. All 36 are{" "}
+                <InlineTooltip
+                    id="tooltip-possibility-grid-equally-likely"
+                    tooltip="Each outcome has exactly the same chance of happening as every other one."
+                    color="#2563EB"
+                    bgColor="rgba(37, 99, 235, 0.12)"
+                >
+                    equally likely
+                </InlineTooltip>
+                , so any
                 event you can describe becomes a matter of counting the squares that match
                 it.
             </EditableParagraph>
@@ -426,7 +438,12 @@ export const possibilityGridBlocks: ReactElement[] = [
                         {...clozePropsFromDefinition(getVariableInfo('answerTotalFourCount'))}
                     />
                 </InlineFeedback>{" "}
-                squares, which makes P(total of 4) ={" "}
+                squares, which makes{" "}
+                <InlineFormula
+                    id="formula-possibility-grid-total-four"
+                    latex="P(\clr{total}{\text{total of 4}}) ="
+                    colorMap={{ total: "#F8A0CD" }}
+                />{" "}
                 <InlineFeedback
                     varName="answerTotalFourProbability"
                     correctValue={["3/36", "1/12"]}

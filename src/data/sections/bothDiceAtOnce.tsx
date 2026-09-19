@@ -6,11 +6,15 @@ import {
     EditableParagraph,
     InlineClozeInput,
     InlineFeedback,
+    InlineFormula,
     InlineLinkedHighlight,
     InlineScrubbleNumber,
+    InlineSpotColor,
+    InlineTooltip,
+    InlineTrigger,
     InteractionHintSequence,
 } from "@/components/atoms";
-import { Figure } from "@/components/molecules";
+import { Figure, FormulaBlock } from "@/components/molecules";
 import { useVar, useSetVar } from "@/stores";
 import { clamp, useSpring } from "@/lib/motion";
 import {
@@ -18,6 +22,8 @@ import {
     clozePropsFromDefinition,
     linkedHighlightPropsFromDefinition,
     numberPropsFromDefinition,
+    scrubVarsFromDefinitions,
+    spotColorPropsFromDefinition,
 } from "../variables";
 import { AMBER, DIE_FACES, INDIGO, INK, INK_QUIET, INK_STRUCTURE, TEAL } from "./diceGridGeometry";
 
@@ -817,9 +823,24 @@ export const bothDiceAtOnceBlocks: ReactElement[] = [
     <StackLayout key="layout-both-dice-tree-lead" maxWidth="xl">
         <Block id="both-dice-tree-lead" padding="sm">
             <EditableParagraph id="para-both-dice-tree-lead" blockId="both-dice-tree-lead">
-                A tree diagram tells the same story by branching instead of counting. The
-                teal die splits the roll into two branches, the indigo die splits each of
-                those again, and clicking any branch end below shades exactly the squares it
+                A{" "}
+                <InlineTooltip
+                    id="tooltip-both-dice-tree-diagram"
+                    tooltip="A branching picture of a two stage experiment: each branch is one outcome of a stage, labelled with its probability."
+                    color="#2563EB"
+                    bgColor="rgba(37, 99, 235, 0.12)"
+                >
+                    tree diagram
+                </InlineTooltip>{" "}
+                tells the same story by branching instead of counting. The{" "}
+                <InlineSpotColor id="spot-both-dice-tree-teal-die" varName="bothTealFace" {...spotColorPropsFromDefinition(getVariableInfo('bothTealFace'))}>
+                    teal die
+                </InlineSpotColor>{" "}
+                splits the roll into two branches, the{" "}
+                <InlineSpotColor id="spot-both-dice-tree-indigo-die" varName="bothIndigoFace" {...spotColorPropsFromDefinition(getVariableInfo('bothIndigoFace'))}>
+                    indigo die
+                </InlineSpotColor>{" "}
+                splits each of those again, and clicking any branch end below shades exactly the squares it
                 owns on the grid above.
             </EditableParagraph>
         </Block>
@@ -864,16 +885,46 @@ export const bothDiceAtOnceBlocks: ReactElement[] = [
                 >
                     one square out of 36
                 </InlineLinkedHighlight>
-                . The tree reaches it by multiplying, 1/6 of 1/6, and the four branch ends
-                add back up to the whole grid.
+                .{" "}
+                <InlineTrigger
+                    id="trigger-both-dice-top-path"
+                    varName="bothLeafPinned"
+                    value="leafBoth"
+                    color="#F7B23B"
+                    bgColor="rgba(247, 178, 59, 0.18)"
+                >
+                    The tree reaches it
+                </InlineTrigger>{" "}
+                by multiplying,{" "}
+                <InlineFormula
+                    id="formula-both-dice-sixth-of-sixth"
+                    latex="\clr{teal}{\tfrac{1}{6}} \text{ of } \clr{indigo}{\tfrac{1}{6}}"
+                    colorMap={{ teal: "#62D0AD", indigo: "#8E90F5" }}
+                />
+                , and the four branch ends add back up to the whole grid.
             </EditableParagraph>
+        </Block>
+    </StackLayout>,
+
+    <StackLayout key="layout-both-dice-product-formula" maxWidth="xl">
+        <Block id="both-dice-product-formula" padding="md">
+            <FormulaBlock
+                latex="P(\clr{teal}{\text{teal}}\ \scrub{bothTealFace} \text{ and } \clr{indigo}{\text{indigo}}\ \scrub{bothIndigoFace}) = \clr{teal}{\frac{1}{6}} \times \clr{indigo}{\frac{1}{6}} = \clr{both}{\frac{1}{36}}"
+                colorMap={{ teal: "#62D0AD", indigo: "#8E90F5", both: "#F7B23B" }}
+                variables={scrubVarsFromDefinitions(["bothTealFace", "bothIndigoFace"])}
+            />
         </Block>
     </StackLayout>,
 
     <StackLayout key="layout-both-dice-question-double-six" maxWidth="xl">
         <Block id="both-dice-question-double-six" padding="sm">
             <EditableParagraph id="para-both-dice-question-double-six" blockId="both-dice-question-double-six">
-                So for the roll every board game player waits for, P(both dice show a 6) ={" "}
+                So for the roll every board game player waits for,{" "}
+                <InlineFormula
+                    id="formula-both-dice-double-six"
+                    latex="P(\clr{both}{\text{both dice show a 6}}) ="
+                    colorMap={{ both: "#F7B23B" }}
+                />{" "}
                 <InlineFeedback
                     varName="answerDoubleSix"
                     correctValue="1/36"
@@ -921,8 +972,12 @@ export const bothDiceAtOnceBlocks: ReactElement[] = [
     <StackLayout key="layout-both-dice-question-below-three" maxWidth="xl">
         <Block id="both-dice-question-below-three" padding="sm">
             <EditableParagraph id="para-both-dice-question-below-three" blockId="both-dice-question-below-three">
-                Widen each band to two faces instead of one, and P(both dice show a number
-                below 3) ={" "}
+                Widen each band to two faces instead of one, and{" "}
+                <InlineFormula
+                    id="formula-both-dice-below-three"
+                    latex="P(\clr{both}{\text{both dice show a number below 3}}) ="
+                    colorMap={{ both: "#F7B23B" }}
+                />{" "}
                 <InlineFeedback
                     varName="answerBothBelowThree"
                     correctValue={["4/36", "1/9"]}

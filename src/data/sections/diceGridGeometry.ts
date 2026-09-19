@@ -21,6 +21,10 @@ export const PAPER_FILL = "#F1F5F9";
 export const TEAL = "#62D0AD";
 export const INDIGO = "#8E90F5";
 export const AMBER = "#F7B23B";
+/** A total and the squares that match it — distinct from either die. */
+export const ROSE = "#F8A0CD";
+/** Mirror-pair links — (a,b) joined to (b,a). */
+export const SKY = "#62CCF9";
 
 /** Cell index (0..35) from a (teal, indigo) pair, both 1..6. */
 export const cellIndex = (teal: number, indigo: number): number =>

@@ -125,7 +125,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for how many squares give a total of 4',
         placeholder: '???',
         correctAnswer: '3',
-        color: '#62D0AD',
+        color: '#F8A0CD',
     },
     answerTotalFourProbability: {
         defaultValue: '',
@@ -134,7 +134,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for P(total of 4)',
         placeholder: '???',
         correctAnswer: ['3/36', '1/12'],
-        color: '#62D0AD',
+        color: '#F8A0CD',
     },
 
     // ========================================
@@ -164,15 +164,15 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         min: 2,
         max: 12,
         step: 1,
-        color: '#62D0AD',
+        color: '#F8A0CD',
     },
     mirrorHighlight: {
         defaultValue: '',
         type: 'linkedHighlight',
         label: 'Mirror pair highlight',
         description: 'Which mirror pair of the grid the prose is pointing at',
-        color: '#8E90F5',
-        bgColor: 'rgba(142, 144, 245, 0.2)',
+        color: '#62CCF9',
+        bgColor: 'rgba(98, 204, 249, 0.2)',
     },
     answerTotalNineCount: {
         defaultValue: '',
@@ -181,7 +181,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for how many squares give a total of 9',
         placeholder: '???',
         correctAnswer: '4',
-        color: '#62D0AD',
+        color: '#F8A0CD',
     },
     answerTotalFiveProbability: {
         defaultValue: '',
@@ -190,7 +190,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for P(total of 5)',
         placeholder: '???',
         correctAnswer: ['4/36', '1/9'],
-        color: '#62D0AD',
+        color: '#F8A0CD',
     },
 
     // ========================================
@@ -237,7 +237,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for P(both dice show a 6)',
         placeholder: '???',
         correctAnswer: ['1/36'],
-        color: '#62D0AD',
+        color: '#F7B23B',
     },
     answerBothBelowThree: {
         defaultValue: '',
@@ -246,7 +246,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for P(both dice show a number below 3)',
         placeholder: '???',
         correctAnswer: ['4/36', '1/9'],
-        color: '#62D0AD',
+        color: '#F7B23B',
     },
 
     // ========================================
@@ -280,7 +280,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         placeholder: '???',
         correctAnswer: 'counted twice',
         options: ['counted twice', 'impossible to roll', 'worth double', 'missing from the grid'],
-        color: '#8E90F5',
+        color: '#F7B23B',
     },
     answerAtLeastOneFive: {
         defaultValue: '',
@@ -289,7 +289,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for P(at least one die shows a 5)',
         placeholder: '???',
         correctAnswer: ['11/36'],
-        color: '#62D0AD',
+        color: '#F8A0CD',
     },
 
     // Uncomment and modify these examples for your lesson:

@@ -7,7 +7,9 @@ import {
     InlineClozeChoice,
     InlineClozeInput,
     InlineFeedback,
+    InlineFormula,
     InlineLinkedHighlight,
+    InlineSpotColor,
     InteractionHintSequence,
 } from "@/components/atoms";
 import { Figure } from "@/components/molecules";
@@ -18,6 +20,7 @@ import {
     choicePropsFromDefinition,
     clozePropsFromDefinition,
     linkedHighlightPropsFromDefinition,
+    spotColorPropsFromDefinition,
 } from "../variables";
 import {
     ALL_CELLS,
@@ -29,6 +32,7 @@ import {
     INK,
     INK_QUIET,
     INK_STRUCTURE,
+    ROSE,
     TEAL,
     VIEW_WIDTH,
     cellCentreX,
@@ -51,6 +55,7 @@ const CORRECT_CELLS = ALL_CELLS.filter((index) => {
 });
 const CORRECT_SET = new Set(CORRECT_CELLS);
 const OVERLAP_CELL = cellIndex(6, 6);
+const SUCCESS = "#22c55e";
 
 function statusFor(shaded: number[]): string {
     if (shaded.length === 0) return "pending";
@@ -171,20 +176,21 @@ function CountNotAddDrawing() {
                                 height={CELL}
                                 fill={
                                     isStray
-                                        ? "rgba(239, 68, 68, 0.16)"
+                                        ? "rgba(239, 68, 68, 0.34)"
                                         : isShaded
-                                          ? "rgba(98, 208, 173, 0.24)"
+                                          ? "rgba(248, 160, 205, 0.26)"
                                           : "#FFFFFF"
                                 }
-                                stroke={isStray ? "#ef4444" : isShaded ? TEAL : INK_QUIET}
+                                stroke={isStray ? "#ef4444" : isShaded ? ROSE : INK_QUIET}
                                 strokeWidth={isShaded ? 2.5 : 1.5}
                                 style={{ transition: "fill 150ms ease-out" }}
                             />
                             <text
                                 x={cellCentreX(indigo, ORIGIN_X)}
                                 y={cellCentreY(teal, ORIGIN_Y) + 5}
-                                fill={isShaded ? INK : INK_QUIET}
+                                fill={isStray ? "#B91C1C" : isShaded ? INK : INK_QUIET}
                                 fontSize="12"
+                                fontWeight={isStray ? 700 : 400}
                                 textAnchor="middle"
                                 style={{ fontVariantNumeric: "tabular-nums" }}
                             >
@@ -275,20 +281,20 @@ function CountNotAddDrawing() {
             <g opacity={recede} style={{ transition: "opacity 150ms ease-out" }} fontSize="12">
                 <text x={PANEL_X} y={110} fill={INK_STRUCTURE}>Adding chances</text>
                 <text x={PANEL_X} y={136} fill={INK_STRUCTURE} fontSize="16" fontWeight={600} style={{ fontVariantNumeric: "tabular-nums" }}>
-                    6 + 6 = 12
+                    <tspan fill={TEAL}>6</tspan> + <tspan fill={INDIGO}>6</tspan> = 12
                 </text>
                 <text x={PANEL_X} y={176} fill={INK_STRUCTURE}>You shaded</text>
                 <text
                     x={PANEL_X}
                     y={206}
-                    fill={status === "correct" ? TEAL : status === "stray" ? "#ef4444" : INK}
+                    fill={status === "correct" ? SUCCESS : status === "stray" ? "#ef4444" : INK}
                     fontSize="24"
                     fontWeight={700}
                     style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                     {shaded.length}
                 </text>
-                <text x={PANEL_X} y={240} fill={status === "correct" ? TEAL : INK_STRUCTURE} fontSize="12">
+                <text x={PANEL_X} y={240} fill={status === "correct" ? SUCCESS : INK_STRUCTURE} fontSize="12">
                     {STATUS_TEXT[status]}
                 </text>
             </g>
@@ -379,7 +385,13 @@ export const countNotAddBlocks: ReactElement[] = [
         <Block id="count-not-add-setup" padding="sm">
             <EditableParagraph id="para-count-not-add-setup" blockId="count-not-add-setup">
                 Each die shows a 6 one time in six, so the chance that at least one of them
-                does looks like 1/6 + 1/6, which is 12 squares out of 36. Shade every square
+                does looks like{" "}
+                <InlineFormula
+                    id="formula-count-not-add-sum"
+                    latex="\clr{teal}{\tfrac{1}{6}} + \clr{indigo}{\tfrac{1}{6}}"
+                    colorMap={{ teal: "#62D0AD", indigo: "#8E90F5" }}
+                />
+                , which is 12 squares out of 36. Shade every square
                 on the grid where at least one die shows a 6, and count what you actually
                 get.
             </EditableParagraph>
@@ -404,7 +416,15 @@ export const countNotAddBlocks: ReactElement[] = [
                 >
                     square where both dice show 6
                 </InlineLinkedHighlight>{" "}
-                belongs to the teal strip and the indigo strip at once, so adding the two
+                belongs to the{" "}
+                <InlineSpotColor id="spot-count-not-add-teal-strip" varName="tealDie" {...spotColorPropsFromDefinition(getVariableInfo('tealDie'))}>
+                    teal strip
+                </InlineSpotColor>{" "}
+                and the{" "}
+                <InlineSpotColor id="spot-count-not-add-indigo-strip" varName="indigoDie" {...spotColorPropsFromDefinition(getVariableInfo('indigoDie'))}>
+                    indigo strip
+                </InlineSpotColor>{" "}
+                at once, so adding the two
                 chances counts it twice. Counting squares never makes that mistake.
             </EditableParagraph>
         </Block>
@@ -413,7 +433,19 @@ export const countNotAddBlocks: ReactElement[] = [
     <StackLayout key="layout-count-not-add-question-reason" maxWidth="xl">
         <Block id="count-not-add-question-reason" padding="sm">
             <EditableParagraph id="para-count-not-add-question-reason" blockId="count-not-add-question-reason">
-                Adding 1/6 and 1/6 overshoots by exactly one square, because the roll where
+                Adding{" "}
+                <InlineFormula
+                    id="formula-count-not-add-teal-sixth"
+                    latex="\clr{teal}{\tfrac{1}{6}}"
+                    colorMap={{ teal: "#62D0AD" }}
+                />{" "}
+                and{" "}
+                <InlineFormula
+                    id="formula-count-not-add-indigo-sixth"
+                    latex="\clr{indigo}{\tfrac{1}{6}}"
+                    colorMap={{ indigo: "#8E90F5" }}
+                />{" "}
+                overshoots by exactly one square, because the roll where
                 both dice show 6 has been{" "}
                 <InlineFeedback
                     varName="answerDoubleCountReason"
@@ -439,7 +471,12 @@ export const countNotAddBlocks: ReactElement[] = [
     <StackLayout key="layout-count-not-add-question-five" maxWidth="xl">
         <Block id="count-not-add-question-five" padding="sm">
             <EditableParagraph id="para-count-not-add-question-five" blockId="count-not-add-question-five">
-                Same grid, different face: P(at least one die shows a 5) ={" "}
+                Same grid, different face:{" "}
+                <InlineFormula
+                    id="formula-count-not-add-at-least-one-five"
+                    latex="P(\clr{match}{\text{at least one die shows a 5}}) ="
+                    colorMap={{ match: "#F8A0CD" }}
+                />{" "}
                 <InlineFeedback
                     varName="answerAtLeastOneFive"
                     correctValue="11/36"

@@ -6,8 +6,10 @@ import {
     EditableParagraph,
     InlineClozeInput,
     InlineFeedback,
+    InlineFormula,
     InlineLinkedHighlight,
     InlineScrubbleNumber,
+    InlineSpotColor,
     InteractionHintSequence,
 } from "@/components/atoms";
 import { Figure } from "@/components/molecules";
@@ -18,6 +20,7 @@ import {
     clozePropsFromDefinition,
     linkedHighlightPropsFromDefinition,
     numberPropsFromDefinition,
+    spotColorPropsFromDefinition,
 } from "../variables";
 import {
     ALL_CELLS,
@@ -30,6 +33,8 @@ import {
     INK_QUIET,
     INK_STRUCTURE,
     PAPER_FILL,
+    ROSE,
+    SKY,
     TEAL,
     VIEW_WIDTH,
     cellCentreX,
@@ -104,7 +109,7 @@ function OrderMattersDrawing() {
 
             <g opacity={recede} style={{ transition: "opacity 150ms ease-out" }}>
                 {/* Axis titles and die faces */}
-                <text x={ORIGIN_X + GRID_SIZE / 2} y={36} fill={INK_STRUCTURE} fontSize="12" textAnchor="middle">
+                <text x={ORIGIN_X + GRID_SIZE / 2} y={36} fill={INDIGO} fontSize="12" fontWeight={600} textAnchor="middle">
                     Indigo die
                 </text>
                 {DIE_FACES.map((face) => (
@@ -123,8 +128,9 @@ function OrderMattersDrawing() {
                 <text
                     x={44}
                     y={ORIGIN_Y + GRID_SIZE / 2}
-                    fill={INK_STRUCTURE}
+                    fill={TEAL}
                     fontSize="12"
+                    fontWeight={600}
                     textAnchor="middle"
                     transform={`rotate(-90 44 ${ORIGIN_Y + GRID_SIZE / 2})`}
                 >
@@ -156,8 +162,8 @@ function OrderMattersDrawing() {
                                 y={cellY(teal, ORIGIN_Y)}
                                 width={CELL}
                                 height={CELL}
-                                fill={isMatch ? "rgba(98, 208, 173, 0.22)" : "#FFFFFF"}
-                                stroke={isTwinless ? AMBER : isMatch ? TEAL : INK_QUIET}
+                                fill={isMatch ? "rgba(248, 160, 205, 0.26)" : "#FFFFFF"}
+                                stroke={isTwinless ? AMBER : isMatch ? ROSE : INK_QUIET}
                                 strokeWidth={isMatch ? 3 : 1.5}
                                 style={{ transition: "fill 150ms ease-out" }}
                             />
@@ -189,7 +195,7 @@ function OrderMattersDrawing() {
                                     y1={cellCentreY(a, ORIGIN_Y)}
                                     x2={cellCentreX(a, ORIGIN_X)}
                                     y2={cellCentreY(b, ORIGIN_Y)}
-                                    stroke={INDIGO}
+                                    stroke={SKY}
                                     strokeWidth="9"
                                     opacity={0.28}
                                     strokeLinecap="round"
@@ -200,7 +206,7 @@ function OrderMattersDrawing() {
                                 y1={cellCentreY(a, ORIGIN_Y)}
                                 x2={cellCentreX(a, ORIGIN_X)}
                                 y2={cellCentreY(b, ORIGIN_Y)}
-                                stroke={INDIGO}
+                                stroke={SKY}
                                 strokeWidth={mirrorActive ? 4 : 2}
                                 strokeLinecap="round"
                                 style={{ transition: "stroke-width 150ms ease-out" }}
@@ -216,7 +222,7 @@ function OrderMattersDrawing() {
                 <text x={PANEL_X} y={128} fill={INK_STRUCTURE} style={{ fontVariantNumeric: "tabular-nums" }}>
                     {`a total of ${target}`}
                 </text>
-                <text x={PANEL_X} y={166} fill={TEAL} fontSize="26" fontWeight={700} style={{ fontVariantNumeric: "tabular-nums" }}>
+                <text x={PANEL_X} y={166} fill={ROSE} fontSize="26" fontWeight={700} style={{ fontVariantNumeric: "tabular-nums" }}>
                     {revealed ? count : "?"}
                 </text>
                 {revealed && guess > 0 && (
@@ -248,8 +254,8 @@ function OrderMattersDrawing() {
                             width={PAD_WIDTH}
                             height={PAD_HEIGHT}
                             rx="6"
-                            fill={selected ? "rgba(98, 208, 173, 0.18)" : PAPER_FILL}
-                            stroke={selected ? TEAL : INK_QUIET}
+                            fill={selected ? "rgba(248, 160, 205, 0.22)" : PAPER_FILL}
+                            stroke={selected ? ROSE : INK_QUIET}
                             strokeWidth={selected ? 2.5 : 1.5}
                         />
                         <text
@@ -273,7 +279,7 @@ function OrderMattersDrawing() {
                     cx={handleCentre}
                     cy={PAD_Y + PAD_HEIGHT + 16}
                     r="9"
-                    fill={TEAL}
+                    fill={ROSE}
                     filter="url(#order-matters-handle-shadow)"
                 />
             )}
@@ -380,8 +386,23 @@ export const orderMattersBlocks: ReactElement[] = [
     <StackLayout key="layout-order-matters-reflect" maxWidth="xl">
         <Block id="order-matters-reflect" padding="sm">
             <EditableParagraph id="para-order-matters-reflect" blockId="order-matters-reflect">
-                Six squares, not three. The dice are separate objects, so teal 2 with indigo
-                5 is a different roll from teal 5 with indigo 2, and the grid keeps those{" "}
+                Six squares, not three. The dice are separate objects, so{" "}
+                <InlineSpotColor id="spot-order-matters-teal-two" varName="tealDie" {...spotColorPropsFromDefinition(getVariableInfo('tealDie'))}>
+                    teal 2
+                </InlineSpotColor>{" "}
+                with{" "}
+                <InlineSpotColor id="spot-order-matters-indigo-five" varName="indigoDie" {...spotColorPropsFromDefinition(getVariableInfo('indigoDie'))}>
+                    indigo 5
+                </InlineSpotColor>{" "}
+                is a different roll from{" "}
+                <InlineSpotColor id="spot-order-matters-teal-five" varName="tealDie" {...spotColorPropsFromDefinition(getVariableInfo('tealDie'))}>
+                    teal 5
+                </InlineSpotColor>{" "}
+                with{" "}
+                <InlineSpotColor id="spot-order-matters-indigo-two" varName="indigoDie" {...spotColorPropsFromDefinition(getVariableInfo('indigoDie'))}>
+                    indigo 2
+                </InlineSpotColor>
+                , and the grid keeps those{" "}
                 <InlineLinkedHighlight
                     id="link-order-matters-mirror"
                     varName="mirrorHighlight"
@@ -443,7 +464,12 @@ export const orderMattersBlocks: ReactElement[] = [
     <StackLayout key="layout-order-matters-question-five" maxWidth="xl">
         <Block id="order-matters-question-five" padding="sm">
             <EditableParagraph id="para-order-matters-question-five" blockId="order-matters-question-five">
-                Counting the same way, P(total of 5) ={" "}
+                Counting the same way,{" "}
+                <InlineFormula
+                    id="formula-order-matters-total-five"
+                    latex="P(\clr{total}{\text{total of 5}}) ="
+                    colorMap={{ total: "#F8A0CD" }}
+                />{" "}
                 <InlineFeedback
                     varName="answerTotalFiveProbability"
                     correctValue={["4/36", "1/9"]}
